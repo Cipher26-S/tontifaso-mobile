@@ -49,9 +49,10 @@ class Loan {
       endDate: json['endDate'] != null 
           ? DateTime.parse(json['endDate']) 
           : (json['end_date'] != null ? DateTime.parse(json['end_date']) : null),
-      totalAmount: double.tryParse(json['totalAmount']?.toString() ?? '0') ?? total,
+      // Montants calculés si l'API ne les fournit pas (tryParse('0') renverrait 0, pas le calcul)
+      totalAmount: double.tryParse(json['totalAmount']?.toString() ?? json['total_amount']?.toString() ?? '') ?? total,
       paidAmount: paid,
-      remainingAmount: double.tryParse(json['remainingAmount']?.toString() ?? '0') ?? (total - paid),
+      remainingAmount: double.tryParse(json['remainingAmount']?.toString() ?? json['remaining_amount']?.toString() ?? '') ?? (total - paid),
       status: json['status'] ?? 'active',
       description: json['description'] ?? json['purpose'],
     );
