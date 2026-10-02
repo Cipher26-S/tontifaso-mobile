@@ -52,6 +52,8 @@ Future<bool> login(String email, String password) async {
       final prefs = await SharedPreferences.getInstance();
       await prefs.setString(AppConfig.userIdKey, _userId!);
       await prefs.setString(AppConfig.userNameKey, _userName ?? '');
+      // Cookie de session enregistré par ApiService.login
+      _token = prefs.getString(AppConfig.sessionCookieKey);
       
       _isAuthenticated = true;
       _isLoading = false;

@@ -294,7 +294,7 @@ class ProfileScreen extends StatelessWidget {
                       onTap: () {
                         showAboutDialog(
                           context: context,
-                          applicationName: 'MicroFinance',
+                          applicationName: 'TontiFaso',
                           applicationVersion: '1.0.0',
                           applicationIcon: Icon(
                             Icons.account_balance_wallet,

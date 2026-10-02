@@ -5,6 +5,7 @@ import '../config/app_config.dart';
 import '../models/member.dart';
 import '../models/deposit.dart';
 import '../models/loan.dart';
+import 'demo_data.dart';
 
 class ApiService {
   final String baseUrl;
@@ -15,6 +16,12 @@ class ApiService {
   // ==================== INSCRIPTION ====================
   // ==================== INSCRIPTION ====================
   Future<Map<String, dynamic>> register(String fullname, String email, String password) async {
+    if (AppConfig.demoMode) {
+      return {
+        'success': true,
+        'message': 'Mode démo : utilisez ${DemoData.email} / ${DemoData.password} pour vous connecter',
+      };
+    }
     try {
       final response = await http.post(
         Uri.parse('$baseUrl${AppConfig.registerEndpoint}'),
@@ -87,6 +94,18 @@ class ApiService {
 
   // Connexion (retourne les données utilisateur)
   Future<Map<String, dynamic>> login(String email, String password) async {
+    if (AppConfig.demoMode) {
+      if (email != DemoData.email || password != DemoData.password) {
+        throw Exception('Identifiants de démo : ${DemoData.email} / ${DemoData.password}');
+      }
+      await saveSessionCookie('PHPSESSID=demo');
+      return {
+        'success': true,
+        'user_id': DemoData.memberId,
+        'user_name': DemoData.memberName,
+        'user_role': 'member',
+      };
+    }
     try {
       final response = await http.post(
         Uri.parse('$baseUrl${AppConfig.loginEndpoint}'),
@@ -125,6 +144,12 @@ class ApiService {
 
   // Déconnexion
   Future<void> logout() async {
+    if (AppConfig.demoMode) {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.remove(AppConfig.sessionCookieKey);
+      _sessionCookie = null;
+      return;
+    }
     try {
       await http.get(
         Uri.parse('$baseUrl${AppConfig.logoutEndpoint}'),
@@ -144,6 +169,7 @@ class ApiService {
 
   // Récupérer toutes les données (membres, dépôts, prêts)
   Future<Map<String, dynamic>> getAllData() async {
+    if (AppConfig.demoMode) return DemoData.allData();
     try {
       await loadSessionCookie(); // Charger le cookie si pas déjà fait
       

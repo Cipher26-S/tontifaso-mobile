@@ -21,15 +21,16 @@ class _DashboardScreenState extends State<DashboardScreen> {
   @override
   void initState() {
     super.initState();
-    _loadData();
+    // Après la première image : le provider notifie ses écouteurs pendant le chargement
+    WidgetsBinding.instance.addPostFrameCallback((_) => _loadData());
   }
 
   Future<void> _loadData() async {
     final authProvider = Provider.of<AuthProvider>(context, listen: false);
     final memberProvider = Provider.of<MemberProvider>(context, listen: false);
     
-    if (authProvider.userId != null && authProvider.token != null) {
-      memberProvider.setToken(authProvider.token!);
+    if (authProvider.userId != null) {
+      if (authProvider.token != null) memberProvider.setToken(authProvider.token!);
       await memberProvider.loadAllData(authProvider.userId!);
     }
   }

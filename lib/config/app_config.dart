@@ -8,11 +8,15 @@ class AppConfig {
   // -----------------------------------------------------------------------------
   static const String baseUrl = String.fromEnvironment(
     'BASE_URL',
-    defaultValue: 'http://192.168.100.43:8080',
+    defaultValue: 'http://192.168.100.60:8080',
   );
 
   // Pour l'émulateur Android, l'adresse spéciale est : http://10.0.2.2:8000
   // Pour l'émulateur iOS, l'adresse est : http://localhost:8000
+
+  // Mode démo : données fictives intégrées, aucun backend nécessaire
+  //    flutter run --dart-define=DEMO_MODE=true
+  static const bool demoMode = bool.fromEnvironment('DEMO_MODE');
 
   // Endpoints selon la documentation TontiFaso
   static const String loginEndpoint = '/backend/auth/login.php';

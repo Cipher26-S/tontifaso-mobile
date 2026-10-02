@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import '../config/app_config.dart';
 import '../providers/auth_provider.dart';
+import '../services/demo_data.dart';
 import 'dashboard_screen.dart';
 import 'register_screen.dart';
 
@@ -90,7 +92,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   
                   // Titre
                   const Text(
-                    'MicroFinance',
+                    'TontiFaso',
                     style: TextStyle(
                       fontSize: 32,
                       fontWeight: FontWeight.bold,
@@ -119,20 +121,20 @@ class _LoginScreenState extends State<LoginScreen> {
                         key: _formKey,
                         child: Column(
                           children: [
-                            // Champ téléphone
+                            // Champ email (le backend TontiFaso identifie les membres par email)
                             TextFormField(
                               controller: _phoneController,
-                              keyboardType: TextInputType.phone,
+                              keyboardType: TextInputType.emailAddress,
                               decoration: InputDecoration(
-                                labelText: 'Numéro de téléphone',
-                                prefixIcon: const Icon(Icons.phone),
+                                labelText: 'Email',
+                                prefixIcon: const Icon(Icons.email),
                                 border: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(12),
                                 ),
                               ),
                               validator: (value) {
                                 if (value == null || value.isEmpty) {
-                                  return 'Veuillez entrer votre numéro';
+                                  return 'Veuillez entrer votre email';
                                 }
                                 return null;
                               },
@@ -169,6 +171,30 @@ class _LoginScreenState extends State<LoginScreen> {
                                 return null;
                               },
                             ),
+                            if (AppConfig.demoMode) ...[
+                              const SizedBox(height: 16),
+                              InkWell(
+                                borderRadius: BorderRadius.circular(12),
+                                onTap: () {
+                                  _phoneController.text = DemoData.email;
+                                  _passwordController.text = DemoData.password;
+                                },
+                                child: Container(
+                                  width: double.infinity,
+                                  padding: const EdgeInsets.all(12),
+                                  decoration: BoxDecoration(
+                                    color: Colors.green.shade50,
+                                    borderRadius: BorderRadius.circular(12),
+                                    border: Border.all(color: Colors.green.shade200),
+                                  ),
+                                  child: Text(
+                                    'Mode démo — touchez ici pour remplir\n${DemoData.email} / ${DemoData.password}',
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(color: Colors.green.shade800),
+                                  ),
+                                ),
+                              ),
+                            ],
                             const SizedBox(height: 30),
                             // Bouton de connexion
                             Consumer<AuthProvider>(

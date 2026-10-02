@@ -1,98 +1,80 @@
-# MicroFinance Mobile App
+# TontiFaso Mobile
 
-Application mobile Flutter pour la gestion de microfinance - Interface membre
+> Application mobile Flutter pour les membres d'une tontine / microfinance : solde, épargne, prêts et remboursements, en FCFA.
 
-## 📱 Fonctionnalités
+Client mobile de la plateforme **TontiFaso** (backend PHP). Un **mode démo** intégré permet de l'essayer sans serveur.
 
-- ✅ Connexion sécurisée
-- ✅ Consultation du solde en temps réel
-- ✅ Historique des dépôts
-- ✅ Suivi des prêts et remboursements
-- ✅ Profil utilisateur
-- ✅ Statistiques financières
+## Fonctionnalités
 
-## 🚀 Installation
+- **Connexion et inscription** des membres (session PHP par cookie)
+- **Tableau de bord** : solde, total épargné, prêts en cours et reste à payer
+- **Épargne** : historique des dépôts et cotisations
+- **Prêts** : liste, détail, taux, durée, progression du remboursement, retards
+- **Profil** du membre
+- **Mode démo** : données réalistes intégrées, identifiants préremplis d'un clic
 
-### Prérequis
+## Stack technique
 
-- Flutter SDK (>= 3.0.0)
-- Android Studio / Xcode
-- Un émulateur ou appareil physique
+| Couche | Technologies |
+|---|---|
+| Mobile | Flutter, Dart, Provider |
+| Réseau | http, session par cookie `PHPSESSID` |
+| Stockage local | shared_preferences |
+| Formatage | intl (dates et montants en français) |
+| Backend attendu | API PHP TontiFaso (`/backend/auth/*.php`, `/backend/api/*.php`) |
 
-### Étapes
+## Structure
 
-1. **Cloner le projet**
-```bash
-git clone <votre-repo>
-cd microfinance_mobile
+```
+lib/
+├── config/app_config.dart  URL de l'API, endpoints, mode démo
+├── models/                 Member, Deposit, Loan
+├── providers/              AuthProvider, MemberProvider
+├── services/
+│   ├── api_service.dart    Appels à l'API TontiFaso
+│   └── demo_data.dart      Données du mode démo
+└── screens/                login, register, dashboard, deposits, loans, loan_detail, profile
 ```
 
-2. **Installer les dépendances**
+## Lancer l'application
+
+**Prérequis** : Flutter SDK 3.x.
+
 ```bash
 flutter pub get
 ```
 
-3. **Configurer l'API Backend**
+### En mode démo (sans backend)
 
-Modifier `lib/config/app_config.dart` :
-```dart
-// Pour émulateur Android
-static const String baseUrl = 'http://10.0.2.2:8000/api/v1';
-
-// Pour émulateur iOS
-static const String baseUrl = 'http://localhost:8000/api/v1';
-
-// Pour appareil physique
-static const String baseUrl = 'http://VOTRE_IP:8000/api/v1';
-```
-
-4. **Lancer l'application**
 ```bash
-flutter run
+flutter run --dart-define=DEMO_MODE=true
 ```
 
-## 📦 Structure du projet
-```
-lib/
-├── config/          # Configuration (API, constantes)
-├── models/          # Modèles de données
-├── services/        # Services API
-├── providers/       # State management (Provider)
-├── screens/         # Écrans de l'application
-├── widgets/         # Widgets réutilisables
-└── main.dart        # Point d'entrée
+Identifiants : `demo@tontifaso.bf` / `demo1234` (ou touchez l'encart « Mode démo » sur l'écran de connexion).
+
+### Avec le backend TontiFaso
+
+```bash
+flutter run --dart-define=BASE_URL=http://192.168.1.10:8080
 ```
 
-## 🔧 Technologies utilisées
+Remplacez l'adresse par celle du serveur PHP (`http://10.0.2.2:8080` depuis l'émulateur Android).
 
-- **Framework**: Flutter
-- **State Management**: Provider
-- **HTTP Client**: http package
-- **Storage**: SharedPreferences
-- **Charts**: fl_chart
-- **Formatage**: intl
+### Version web de démonstration
 
-## 📸 Captures d'écran
+```bash
+flutter build web --release --dart-define=DEMO_MODE=true
+```
 
-_À ajouter après les tests_
+## Tests
 
-## 🧪 Tests
+```bash
+flutter test --dart-define=DEMO_MODE=true
+```
 
-Pour tester l'application sans backend :
+Les tests rejouent le parcours complet : splash, connexion, tableau de bord rempli, refus des mauvais identifiants.
 
-1. Modifier les services API pour retourner des données de test
-2. Ou utiliser un mock server
+## Auteur
 
-## 📝 Notes de développement
-
-- L'app utilise `10.0.2.2` pour Android émulateur (qui redirige vers localhost de la machine hôte)
-- Pour iOS, utiliser `localhost` directement
-- Sur appareil physique, utiliser l'adresse IP locale de votre machine
-
-## 👤 Auteur
-
-Votre nom
-
-## 📄 Licence
-
-Ce projet est sous licence MIT
+**Sawadogo Kiswendsida Salif** — Développeur Full-Stack & Mobile
+[GitHub](https://github.com/Cipher26-S) · [LinkedIn](https://www.linkedin.com/in/salif-sawadogo-348081375)
